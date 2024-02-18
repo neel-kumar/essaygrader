@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF=8">
+	<meta gttp-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-state=1.0">
+	<title>Essay Grader</title>
+	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+<style>
+body {
+	margin: 40px auto;
+	background-color: #63C5DA;
+	line-height: 1.6;
+	max-width: 850px;
+	font-size: 18px;
+	padding: 0 10px
+
+}
+</style>
+
+</head>
+<body>
+	<form hx-post="/submit" hx-swap="outerHTML">
+		<h2>Submit your essay to I, Mark Adams, and await judgement</h2>
+		<!-- <input type="text" name="name" placeholder="Full Name" /><br/> -->
+		<textarea  name="essay" placeholder="Type your essay here" rows="5" cols="30"></textarea><br/>
+		<button type="submit">Submit</button>
+	</form>
+</body>
+</html>
