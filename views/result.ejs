@@ -12,8 +12,11 @@ table {
 <article>
 
 <p><%= locals.essay %></p>
-<h3><%= locals.name %>'s score is <%= locals.score %></h3>
-
+<% if(score > 83) { %>
+	<h3 style="color:lightgreen;"><%= name %> got a <%= score %>%</h3>
+<% } else { %>
+	<h3 style="color:red;"><%= name %> got a <%= score %>%</h3>
+<% } %>
 <table>
 	<tr>
 		<th>Reason</th>

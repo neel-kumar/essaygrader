@@ -21,10 +21,6 @@ const db = mongoose.model('test', essaySchema);
 var preps=new Set();
 const fs = require('fs');
 fs.readFile('./data/preps.txt', 'utf8', (err, data) => {
-	if (err) {
-		console.error(err);
-		return;
-	}
 	var x=data.split("\n");
 	for(var i=0;i<x.length;i++) {
 		if(x[i]!='') preps.add(x[i]);
@@ -103,19 +99,24 @@ app.get('/', (req,res) => {
 
 app.post('/submit', (req,res) => {
 	var [w,score] = grader(req.body.essay);
-	const ndoc = new db({ "name":req.body.name, "text":req.body.essay, "score":score });
-	ndoc.save().then(function(result) {
-		console.log(result);
-		res.render('result',{
-			essay:req.body.essay,
-			name:`${req.body.name}`,
-			score:score,
-			why:w
+	db.findOne({ 'text':req.body.essay })
+		.then((result)=>{
+			console.log(w)
+			console.log(score)
+			if(result != null) {
+				w = [['PLAGARISM', 'automatic 0']];
+				score = 0;
+			}
+			const ndoc = new db({ "name":req.body.name, "text":req.body.essay, "score":score });
+			ndoc.save().then(function(result) {
+				res.render('result',{
+					essay:req.body.essay,
+					name:`${req.body.name}`,
+					score:score,
+					why:w
+				})
+			})
 		})
-	})
-	.catch((error)=>{
-		res.status(500).json(error)    
-	});
 });
 
 app.get('/admin', (req,res) => {
@@ -131,4 +132,5 @@ app.get('/admin', (req,res) => {
 });
 
 app.listen(2020);
-console.log('http://localhost:2020/');
+console.log('Essay Submittion: http://localhost:2020/');
+console.log('Admin Portal: http://localhost:2020/admin');
