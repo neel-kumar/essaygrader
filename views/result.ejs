@@ -1,26 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF=8">
-	<meta gttp-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-state=1.0">
-	<title>Essay Grader</title>
-	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
-</head>
-<body>
-	<form hx-get="/" hx-swap="outerHTML" hx-trigger="submit">
-		<button>←</button>
-		<h2><%= locals.scoremsg %></h2>
-		<h2>You got <%= locals.score %>% and here's why:</h2>
-		<% for (var i = 0; i < locals.why.length; i++) { %>
-			<li>
-				<%= why[i] %> </span>
-			</li>
-		<% } %>
-		<br/>
-		<h2>Your Essay:</h2>
-		<%= locals.essay %>
-		<br/>
-	</form>
-</body>
-</html>
+<style>
+p {
+  max-height: 150px;
+  overflow: scroll;
+}
+table {
+  max-height: 300px;
+  overflow: scroll;
+}
+</style>
+<hr/>
+<article>
+
+<p><%= locals.essay %></p>
+<h3><%= locals.name %>'s score is <%= locals.score %></h3>
+
+<table>
+	<tr>
+		<th>Reason</th>
+		<th>Penalty</th>
+	</tr>
+<% for (var i = 0; i < locals.why.length; i++) { %>
+	<tr>
+<% for (var j = 0; j < locals.why[i].length; j++) { %>
+		<th><%= why[i][j] %></th>
+<% } %>
+	</tr>
+<% } %>
+</table>
+
+</article>

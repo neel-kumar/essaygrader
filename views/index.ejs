@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF=8">
-	<meta gttp-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-state=1.0">
-	<title>Essay Grader</title>
-	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+	<head>
+		<meta charset="UTF=8">
+		<meta gttp-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-state=1.0">
+		<title>Essay Grader</title>
+		<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kimeiga/bahunya/dist/bahunya.min.css">
+		<style>
+			img {
+				height:40px;
+				margin:0 auto
+			}
+		</style>
 
-<style>
-body {
-	margin: 40px auto;
-	background-color: #63C5DA;
-	line-height: 1.6;
-	max-width: 850px;
-	font-size: 18px;
-	padding: 0 10px
-
-}
-</style>
-
-</head>
-<body>
-	<form hx-post="/submit" hx-swap="outerHTML">
-		<h2>Submit your essay to I, Mark Adams, and await judgement</h2>
-		<!-- <input type="text" name="name" placeholder="Full Name" /><br/> -->
-		<textarea  name="essay" placeholder="Type your essay here" rows="5" cols="30"></textarea><br/>
-		<button type="submit">Submit</button>
-	</form>
-</body>
+	</head>
+	<body>
+		<form hx-post="/submit" hx-swap="afterend" hx-indicator="#spinner">
+		<article>
+			<h2>Gimme that essay ⬇️</h2>
+			<input required name="name" placeholder="Name"></input><br/>
+			<textarea required  name="essay" placeholder="Type your essay here" rows="10" cols="60"></textarea><br/>
+			<button type="submit">Submit</button>
+			<!-- <img id='spinner' class="htmx-indicator" src='https://i.imgur.com/6zlzWMI.gif'/> -->
+		</article>
+		<h2>Past Essays:</h2>
+		</form>
+	</body>
 </html>

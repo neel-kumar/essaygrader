@@ -1,13 +1,35 @@
+console.log('loading...')
+
 const express = require("express")
 const app = express()
-
 app.set('view engine','ejs')
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req,res) => {
-	res.render('index')
-})
+// mongodb setup
+const mongoose = require("mongoose");
+mongoose.connect('mongodb://localhost:27017/essaygrader').
+	catch(error => console.log(error));
+const essaySchema = new mongoose.Schema({
+    name: String,
+    text: String,
+    score: Number
+},
+{ collection: 'test' });
+const db = mongoose.model('test', essaySchema);
 
+// init preps
+var preps=new Set();
+const fs = require('fs');
+fs.readFile('./data/preps.txt', 'utf8', (err, data) => {
+	if (err) {
+		console.error(err);
+		return;
+	}
+	var x=data.split("\n");
+	for(var i=0;i<x.length;i++) {
+		if(x[i]!='') preps.add(x[i]);
+	}
+});
 function grader(essay) {
 	var why=[]
 	var words=essay.split(" ")
@@ -16,9 +38,9 @@ function grader(essay) {
 	// word count
 	score-=50
 	if(words.length<500)
-		why.push("Essay is too short ... -50%");
+		why.push(["Essay is too short",50]);
 	else if(words.length>1000)
-		why.push("Essay is too long ... -50%");
+		why.push(["Essay is too long",50]);
 	else
 		score+=50
 
@@ -28,50 +50,85 @@ function grader(essay) {
 	for(var i=0;i<words.length;i++) {
 		var word=words[i];
 		if(word.charAt(word.length-1)=='.' ||
-		word.charAt(word.length-1)==',')
+			word.charAt(word.length-1)==',')
 			word=word.slice(0,-1)
 		if(word == '') continue
 
 		tw=word
 		word=word.toLowerCase()
 		if(word=='very' || word=='really' || word=='get' ||
-		word=='gotten' || word=='getting' || word=='got' ||
-		word=='gets') {
-			why.push(word + " is a NNN ... -1%")
+			word=='gotten' || word=='getting' || word=='got' ||
+			word=='gets') {
+			why.push([word + " is a NNN",1])
 			score--;
 		}
 		word=tw
 
 		if(dictionary.check(word) == false) {
-			why.push(word + " is not a real word ... -1%");
+			why.push([word + " is not a real word", 1]);
+			score--;
 		}
 	}
 
 	// sentence rules
-	var sents=essay.split(".")
-	// end in prep
-	sents.forEach((s) => {
-		var x = s.split(" ");
-		var w = x[x.length - 1];
-	});
+	essay+=" ";
+	var sents=essay.split(". ");
 
-	return [why,score];
+	for(var i=0;i<sents.length;i++) {
+		let x = sents[i].split(" ");
+		let w = x[0];
+		for(var j=i+1;j<i+4 && j<sents.length;j++) {
+			let x2 = sents[j].split(" ");
+			let w2 = x2[0];
+			if(w2==w) {
+				why.push(["Sentence " + (i+1) + " has the same starting word as Sentence " + (j+1), 3]);
+				score-=3;
+			}
+		}
+
+		var xprep = x[x.length-1];
+		if(xprep.charAt(xprep.length-1)=='.') xprep=xprep.substring(0,-1);
+		if(preps.has(xprep)) {
+			why.push(["The last word of sentence " + (i+1) + " is a preposition", 5]);
+			score-=5;
+		}
+	}
+
+	return [why,Math.max(-200,score)];
 }
 
-app.post('/submit', (req,res) => {
-	var [thirteenreasonswhy,score] = grader(req.body.essay);
-	var msg='';
-	if(score > 97) msg='You 🔥cooked🔥 excellent job'
-	else if(score > 87) msg='You did decent'
-	else if(score > 77) msg='You better come for extra credit'
-	else if(score > 67) msg='The rest of your semester will be terrible'
-	else msg='I am impressed ..... by how low you managed to score'
-	res.render('result',{
-		essay:req.body.essay,
-		scoremsg:`${msg}`,
-		score:score,
-		why:thirteenreasonswhy
-	})
+app.get('/', (req,res) => {
+	res.render('index')
 })
 
-app.listen(2020)
+app.post('/submit', (req,res) => {
+	var [w,score] = grader(req.body.essay);
+	const ndoc = new db({ "name":req.body.name, "text":req.body.essay, "score":score });
+	ndoc.save().then(function(result) {
+		console.log(result);
+		res.render('result',{
+			essay:req.body.essay,
+			name:`${req.body.name}`,
+			score:score,
+			why:w
+		})
+	})
+	.catch((error)=>{
+		res.status(500).json(error)    
+	});
+});
+
+app.get('/admin', (req,res) => {
+	db.find()
+		.then((result)=>{
+			res.render('admin',{
+				json:result
+			})
+		})
+		.catch((error)=>{
+			res.status(500).json(error)    
+		});
+});
+
+app.listen(2020);
+console.log('http://localhost:2020/');

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF=8">
+		<meta gttp-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-state=1.0">
+		<title>Essay Grader Admin</title>
+		<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kimeiga/bahunya/dist/bahunya.min.css">
+		<style>
+			img {
+				height:40px;
+				margin:0 auto
+			}
+			grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+			}
+		</style>
+
+	</head>
+	<body>
+		<h1>Student Scores</h1>
+		<grid>
+		<% for (var i = 0; i < locals.json.length; i++) { %>
+			<article>
+			<% if(json[i]['score'] > 83) { %>
+				<h4 style="color:lightgreen;"><%= json[i]['name'] %> got a <%= json[i]['score'] %>%</h4>
+			<% } else { %>
+				<h4 style="color:red;"><%= json[i]['name'] %> got a <%= json[i]['score'] %>%</h4>
+			<% } %>
+			</article>
+		<% } %>
+		</grid>
+	</body>
+</html>
