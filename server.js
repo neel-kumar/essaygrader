@@ -101,8 +101,6 @@ app.post('/submit', (req,res) => {
 	var [w,score] = grader(req.body.essay);
 	db.findOne({ 'text':req.body.essay })
 		.then((result)=>{
-			console.log(w)
-			console.log(score)
 			if(result != null) {
 				w = [['PLAGARISM', 'automatic 0']];
 				score = 0;
