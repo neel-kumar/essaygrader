@@ -5,7 +5,11 @@ const app = express()
 app.set('view engine','ejs')
 app.use(express.urlencoded({ extended: true }))
 
+// css
+app.use(express.static(__dirname + '/public'));
+
 // mongodb setup
+const dbname = 'test'
 const mongoose = require("mongoose");
 mongoose.connect('mongodb://localhost:27017/essaygrader').
 	catch(error => console.log(error));
@@ -14,8 +18,8 @@ const essaySchema = new mongoose.Schema({
     text: String,
     score: Number
 },
-{ collection: 'test' });
-const db = mongoose.model('test', essaySchema);
+{ collection: dbname });
+const db = mongoose.model(dbname, essaySchema);
 
 // init preps
 var preps=new Set();
@@ -26,6 +30,7 @@ fs.readFile('./data/preps.txt', 'utf8', (err, data) => {
 		if(x[i]!='') preps.add(x[i]);
 	}
 });
+
 function grader(essay) {
 	var why=[]
 	var words=essay.split(" ")
@@ -115,6 +120,10 @@ app.post('/submit', (req,res) => {
 				})
 			})
 		})
+		.catch((error)=>{
+			res.status(500).json(error)
+			console.log(error)
+		});
 });
 
 app.get('/admin', (req,res) => {
@@ -126,6 +135,7 @@ app.get('/admin', (req,res) => {
 		})
 		.catch((error)=>{
 			res.status(500).json(error)
+			console.log(error)
 		});
 });
 

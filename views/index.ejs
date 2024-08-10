@@ -7,22 +7,16 @@
 		<title>Essay Grader</title>
 		<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kimeiga/bahunya/dist/bahunya.min.css">
-		<style>
-			img {
-				height:40px;
-				margin:0 auto
-			}
-		</style>
-
+		<link href="/css/style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<form hx-post="/submit" hx-swap="afterend" hx-indicator="#spinner">
 		<article>
-			<h2>Gimme that essay ⬇️</h2>
+			<h2>Hello young sire submit thine essay</h2>
 			<input required name="name" placeholder="Name"></input><br/>
 			<textarea required  name="essay" placeholder="Type your essay here" rows="10" cols="60"></textarea><br/>
 			<button type="submit">Submit</button>
-			<!-- <img id='spinner' class="htmx-indicator" src='https://i.imgur.com/6zlzWMI.gif'/> -->
+			<img id='spinner' class="htmx-indicator" src='https://i.imgur.com/6zlzWMI.gif'/>
 		</article>
 		<h2>Past Essays:</h2>
 		</form>
