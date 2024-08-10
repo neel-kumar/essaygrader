@@ -125,10 +125,10 @@ app.get('/admin', (req,res) => {
 			})
 		})
 		.catch((error)=>{
-			res.status(500).json(error)    
+			res.status(500).json(error)
 		});
 });
 
 app.listen(2020);
-console.log('Essay Submittion: http://localhost:2020/');
+console.log('Essay Submission: http://localhost:2020/');
 console.log('Admin Portal: http://localhost:2020/admin');

@@ -22,13 +22,13 @@ table {
 		<th>Reason</th>
 		<th>Penalty</th>
 	</tr>
-<% for (var i = 0; i < locals.why.length; i++) { %>
+	<% for (var i = 0; i < locals.why.length; i++) { %>
 	<tr>
-<% for (var j = 0; j < locals.why[i].length; j++) { %>
-		<th><%= why[i][j] %></th>
-<% } %>
+		<% for (var j = 0; j < locals.why[i].length; j++) { %>
+			<th><%= why[i][j] %></th>
+		<% } %>
 	</tr>
-<% } %>
+	<% } %>
 </table>
 
 </article>
