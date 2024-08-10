@@ -1,10 +1,6 @@
 <style>
 p {
-  max-height: 150px;
-  overflow: scroll;
-}
-table {
-  max-height: 300px;
+  max-height: 200px;
   overflow: scroll;
 }
 </style>
@@ -19,14 +15,13 @@ table {
 <% } %>
 <table>
 	<tr>
-		<th>Reason</th>
 		<th>Penalty</th>
+		<th>Reason</th>
 	</tr>
 	<% for (var i = 0; i < locals.why.length; i++) { %>
 	<tr>
-		<% for (var j = 0; j < locals.why[i].length; j++) { %>
-			<th><%= why[i][j] %></th>
-		<% } %>
+			<th><%= why[i][1] %></th>
+			<th><%= why[i][0] %></th>
 	</tr>
 	<% } %>
 </table>

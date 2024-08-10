@@ -11,27 +11,27 @@
 	</head>
 	<body>
 		<h1>Student Scores</h1>
-		<h4>Shows student name, score, and click on a student to view their essay</h4>
+		<p>Shows student name, score, and click on a student to view their essay</p>
 		<grid>
-		<% for (var i = 0; i < locals.json.length; i++) { %>
-			<a class="button" href="#popup"><article>
+		<% for (var i = locals.json.length-1; i >= 0; i--) { %>
+			<a class="button" href="#popup<%= i %>"><article>
 			<% if(json[i]['score'] > 83) { %>
 				<h4 style="color:lightgreen;"><%= json[i]['name'] %>: <%= json[i]['score'] %>%</h4>
 			<% } else { %>
 				<h4 style="color:red;"><%= json[i]['name'] %>: <%= json[i]['score'] %>%</h4>
 			<% } %>
 			</article></a>
-		<% } %>
 
-		<div id="popup2" class="overlay">
-			<a class="cancel" href="#"></a>
-			<div class="popup">
-				<h2>Essay</h2>
-				<div class="content">
-					<p><%= json[i]['text'] %></p>
+			<div id="popup<%= i %>" class="overlay">
+				<a class="cancel" href="#"></a>
+				<div class="popup">
+					<h2><%= json[i]['name'] %>: <%= json[i]['score'] %>%</h2>
+					<div class="content">
+						<p><%= json[i]['text'] %></p>
+					</div>
 				</div>
 			</div>
-		</div>
+		<% } %>
 		</grid>
 	</body>
 </html>
